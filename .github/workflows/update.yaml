@@ -1,0 +1,36 @@
+
+name: Deploy Jekyll Site with Docker
+
+on:
+  push:
+    branches:
+      - main  # Runs the workflow on every push to the main branch
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set Up Docker
+        run: |
+          docker --version
+          docker-compose --version
+
+      - name: Build and Run Jekyll Site in Docker
+        run: |
+          docker-compose up --build -d
+          sleep 30  # Wait for Jekyll to build
+
+      - name: Copy Built Site
+        run: |
+          mkdir -p _site
+          docker cp $(docker-compose ps -q jekyll-site):/usr/src/app/_site ./_site
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./_site
