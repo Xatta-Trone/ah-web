@@ -156,16 +156,17 @@ def update_citation_count(file_path, citation_count):
     current_date = pd.Timestamp.now().strftime('%d %B %Y')
     new_citation_line = f"**Google Scholar citations:** {citation_count} *(as of {current_date})*"
 
-    # Replace existing citation line
+    # Replace existing citation line without affecting the next line
     updated_content = re.sub(
-        r'\*\*Google Scholar citations:\*\*.*\n',
-        f'{new_citation_line}\n',
+        r'\*\*Google Scholar citations:\*\*.*?\(as of .*?\)\*',
+        new_citation_line,
         content
     )
 
     with open(file_path, 'w', encoding='utf-8') as file:
         file.write(updated_content)
     return True
+
 
 
 # After generating publications, update citation counts
