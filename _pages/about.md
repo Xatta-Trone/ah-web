@@ -45,3 +45,23 @@ With **over 5 years of research experience**, I have contributed to **nationally
 ✅ **Increasing Equity in Traffic Safety** *(2023 – 2025)*  
 ✅ **Reducing Pedestrian Fatal Crashes by Improving Lighting Conditions** *(2020-2022)*  
 
+## **Professional Engagement & Leadership**
+
+🌐 **Friend of Committee**  
+Active in several **TRB standing committees**, including:  
+- Pedestrians  
+- Truck and Bus Safety  
+- Transportation in Developing Countries  
+
+🎓 **Designing Leaders Program**  
+- University of Louisiana at Lafayette, USA  
+
+🎓 **Graduate Student Organization (GSO) Representative**  
+- Civil Engineering Department, University of Louisiana at Lafayette  
+- *January 2023 – May 2024*
+
+🌍 **President, Bangladesh Students Association (BSA)**  
+- University of Louisiana at Lafayette  
+- *2021*
+
+
