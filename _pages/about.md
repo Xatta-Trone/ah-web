@@ -34,7 +34,8 @@ With **over 5 years of research experience**, I have contributed to **nationally
 
 ## **Publications & Research Impact**  
 📚 **30+ peer-reviewed publications**, including in **Accident Analysis & Prevention, Journal of Safety Research, and Transportation Research Record**.  
-📊 **Google Scholar citations:** 217 *(as of 31 March 2025)*
+📊 **Google Scholar citations:** 217 *(as of 31 March 2025)*.
+
 📢 **Key topics:** Pedestrian safety, roadway departure crashes, AI-driven safety models, and machine learning applications in transportation.  
 🎤 **Conference Presentations** – Presented research at major **international transportation conferences across the U.S.**  
 
