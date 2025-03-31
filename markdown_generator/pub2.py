@@ -44,12 +44,15 @@ html_escape_table = {
 def html_escape(text):
     return "".join(html_escape_table.get(c, c) for c in str(text))
 
-# --- Load JSON Data ---
+# --- Load JSON Data from GitHub ---
 
 
 url = "https://raw.githubusercontent.com/Xatta-Trone/google-scholar-scrapper/refs/heads/main/scholar-data-U9tD0ywAAAAJ.json"
 response = requests.get(url)
 json_data = response.json()
+
+# Get total citations after loading JSON data
+total_citations = 0
 
 # --- Extract and Transform ---
 
@@ -60,6 +63,17 @@ for pub in json_data["data"]:
         "conference") or pub.get("book") or pub.get("institution") or "Unknown")
     authors = pub.get("authors", "")
     year = pub.get("year", "Unknown")
+    # Convert citation count to int, default to 0 if empty string or invalid
+    pub_citations = pub.get("total_citations", "0")
+    if not pub_citations or not str(pub_citations).strip():
+        pub_citations = 0
+    else:
+        try:
+            pub_citations = int(pub_citations)
+        except (ValueError, TypeError):
+            pub_citations = 0
+
+    total_citations += pub_citations
 
     records.append({
         "pub_date": format_date(pub.get("publication_date", "Unknown")),
@@ -79,6 +93,8 @@ df = pd.DataFrame(records)
 output_folder = "../_publications/"
 os.makedirs(output_folder, exist_ok=True)
 
+new_files_count = 0  # Counter for new files
+
 for _, item in df.iterrows():
     url_slug = item.get("url_slug", "").strip()
     pub_date = str(item.get("pub_date", "Unknown")).strip()
@@ -87,6 +103,10 @@ for _, item in df.iterrows():
 
     md_filename = f"{pub_date}-{url_slug}.md"
     html_filename = f"{pub_date}-{url_slug}"
+    output_path = os.path.join(output_folder, md_filename)
+
+    if os.path.exists(output_path):
+        continue  # Skip existing file
 
     title = html_escape(item.get("title", "Untitled"))
     venue = html_escape(item.get("venue", "N/A"))
@@ -111,12 +131,52 @@ category: manuscripts
 
     if paper_url:
         md += f"\n<a href='{paper_url}'>Download paper here</a>\n"
-    if excerpt:
+    if excerpt and excerpt != "Unknown":
         md += f"\n{excerpt}\n"
 
     md += f"\nRecommended citation: {citation}"
 
-    with open(os.path.join(output_folder, md_filename), "w", encoding="utf-8") as f:
+    with open(output_path, "w", encoding="utf-8") as f:
         f.write(md)
 
-print("✅ Markdown files generated successfully!")
+    new_files_count += 1  # Increment new file counter
+
+# Update citation count in specified files
+
+
+def update_citation_count(file_path, citation_count):
+    if not os.path.exists(file_path):
+        print(f"⚠️ File not found: {file_path}")
+        return False
+
+    with open(file_path, 'r', encoding='utf-8') as file:
+        content = file.read()
+
+    # Update citation count with current date
+    current_date = pd.Timestamp.now().strftime('%d %B %Y')
+    new_citation_line = f"**Google Scholar citations:** {citation_count} *(as of {current_date})*"
+
+    # Replace existing citation line
+    updated_content = re.sub(
+        r'\*\*Google Scholar citations:\*\*.*\n',
+        f'{new_citation_line}\n',
+        content
+    )
+
+    with open(file_path, 'w', encoding='utf-8') as file:
+        file.write(updated_content)
+    return True
+
+
+# After generating publications, update citation counts
+files_to_update = [
+    "../_pages/about.md",
+    "../_pages/highlights.md"
+]
+
+for file_path in files_to_update:
+    if update_citation_count(file_path, total_citations):
+        print(f"✅ Updated citations in {os.path.basename(file_path)}")
+
+print(
+    f"✅ All updates complete! ({new_files_count} new publications, {total_citations} total citations)")

@@ -57,4 +57,4 @@ redirect_from:
 
 - ✍️ **Peer reviewer** for top journals (15+ reviews)
 
-- 📈 **Google Scholar citations:** 177 *(as of Dec 2024)*
+- 📈 **Google Scholar citations:** 217 *(as of 31 March 2025)*
